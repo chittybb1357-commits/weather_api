@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>open weather map - Da Nang</title>
+  </head>
+  <body>
+    <h1>다낭시</h1>
+    <h2>현재 날씨</h2>
+    <h3>날씨 설명: <span id="cdesc"></span></h3>
+    <h3>습도: <span id="chum"></span> %</h3>
+    <h3>풍속: <span id="cwind"></span> m/s</h3>
+    <img id="icon" src="" alt="날씨 아이콘" />
+
+    <script>
+      // 1. 데이터를 매핑할 HTML 요소 선택
+      const cdesc = document.querySelector("#cdesc");
+      const chum = document.querySelector("#chum");
+      const cwind = document.querySelector("#cwind");
+      const icon = document.querySelector("#icon");
+
+      // 2. 알려주신 다낭시 ID(1583992)로 API 호출
+      fetch(
+        "https://api.openweathermap.org/data/2.5/weather?id=1583992&appid=d5948ec3ace590812f0049bbdb822c43&units=metric",
+      )
+        .then(res => res.json())
+        .then(result => {
+          console.log(result); // 브라우저 콘솔에서 전체 데이터 구조 확인 가능
+
+          // 3. API 결과에서 원하는 데이터 추출해서 화면에 대입
+          cdesc.innerText = result.weather[0].description; // 날씨 설명 (예: clear sky)
+          chum.innerText = result.main.humidity; // 습도
+          cwind.innerText = result.wind.speed; // 풍속
+
+          // 4. 날씨 아이콘 주소 설정 (OpenWeatherMap 공식 고화질 주소)
+          let imgURL = `https://openweathermap.org/img/wn/${result.weather[0].icon}@2x.png`;
+          icon.setAttribute("src", imgURL);
+        })
+        .catch(err => console.error("데이터 로드 실패:", err));
+    </script>
+  </body>
+</html>
